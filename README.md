@@ -1,1 +1,3 @@
 # Practical Git
+
+## Prerequisites
