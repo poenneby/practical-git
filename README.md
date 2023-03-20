@@ -134,7 +134,7 @@ git log --graph --decorate --pretty=oneline --abbrev-commit
 ```
 
 ```
-* b1cae93 (HEAD -> master) Generating random numbers to file
+* b1cae93 (HEAD -> main) Generating random numbers to file
 * 6e98149 Generating simple greeting
 ```
 
@@ -156,25 +156,30 @@ git config --global alias.lola "log --graph --decorate --pretty=oneline --abbrev
 
 Someone joins the team and you will need to share the code somehow.
 
-`Ask for a remote repository to be created by the facilitator`
+### Simulate a remote repository locally
+
+Run the following from the parent directory
+```
+mkdir random-number-generator.git && cd random-number-generator.git && git init --bare
+```
 
 Once you have got the repository you can add it as a remote like this
 
 ```
-git remote add origin git@github.com:poenneby/random-number-generator.git
+git remote add origin ../random-number-generator.git
 ```
 
 And with the remote added we can push our local repository
 ```
-git push -u origin master
+git push -u origin main
 ```
 
-The `-u` option configures our repository to set origin master as our default upstream thus pushing our future changes requires only a `git push`
+The `-u` option configures our repository to set origin main as our default upstream thus pushing our future changes requires only a `git push`
 
 Now our new team member can clone this repository and get to work on the next feature - __generating files into a directory__
 
 ```
-git clone git@github.com:poenneby/random-number-generator.git
+git clone random-number-generator.git member
 ```
 
 ## Conflicts
@@ -214,7 +219,7 @@ git push
 But his `push` is rejected, Git has protected us from overwriting work:
 
 ```
-! [rejected]        master -> master (non-fast-forward)
+! [rejected]        main -> main (non-fast-forward)
 error: failed to push some refs to 'git@github.com:poenneby/random-number-generator.git'
 hint: Updates were rejected because the tip of your current branch is behind
 hint: its remote counterpart. Integrate the remote changes (e.g.
@@ -255,9 +260,9 @@ git commit -m "Resolving conflict between generators"
 Running `git lol` we observe that our log is somewhat messy having that branch ending with a useless merge commit
 
 ```
-*   b605c8f (HEAD -> master) Resolving conflict between generators
+*   b605c8f (HEAD -> main) Resolving conflict between generators
 |\
-| * 3c0d104 (origin/master, origin/HEAD) Generating files to out directory
+| * 3c0d104 (origin/main, origin/HEAD) Generating files to out directory
 * | 1206773 Generating named files to out directory
 |/
 * b1cae93 Generating random numbers to file
@@ -287,7 +292,7 @@ You will also have to reset your collegues code to be in sync with the modified 
 
 ```
 git fetch
-git reset --hard origin/master
+git reset --hard origin/main
 ```
 
 ### Features
@@ -315,34 +320,34 @@ git commit -am "Generating named files to out directory"
 git push -u origin feature-2
 ```
 
-Developer 1 wants to merge his code to master but before he does he asks Developer 2 to review his work
+Developer 1 wants to merge his code to main but before he does he asks Developer 2 to review his work
 
-So Developer 2 checkouts the `feature-1` branch and performs a diff to see what's changed compared to master:
+So Developer 2 checkouts the `feature-1` branch and performs a diff to see what's changed compared to main:
 
 ```
 git checkout feature-1
-git diff master..feature-1
+git diff main..feature-1
 ```
 
-Developer 2 decides to accept `feature-1` to be merged to `master`
+Developer 2 decides to accept `feature-1` to be merged to `main`
 
-Developer 1 merge `feature-1` to `master`
+Developer 1 merge `feature-1` to `main`
 
 ```
-git checkout master
+git checkout main
 git merge feature-1
 git push
 ```
 
 Developer 2 has also finished his development and asks Developer 1 to review the code.
 
-Developer 1 decides to accept `feature-2` to be merged to `master`
+Developer 1 decides to accept `feature-2` to be merged to `main`
 
-But before merging he must ensure his branch is up to date with `master` to avoid merge conflicts
+But before merging he must ensure his branch is up to date with `main` to avoid merge conflicts
 
 ```
 git fetch
-git rebase origin/master
+git rebase origin/main
 First, rewinding head to replay your work on top of it...
 Applying: Generating named files to out directory
 Using index info to reconstruct a base tree...
@@ -360,7 +365,7 @@ To check out the original branch and stop rebasing, run "git rebase --abort".
 ```
 Rebasing the branch means including the commits from the source branch first and then applying the commits from the branch on top.
 
-And it turns out there are conflicts to be resolved. The clear advantage is that we are resolving the conflict safely in our branch and not at `master`.
+And it turns out there are conflicts to be resolved. The clear advantage is that we are resolving the conflict safely in our branch and not at `main`.
 
 This time we resolve the conflict by accepting "their" modifications, "their" being "us" in our branch.
 
@@ -374,10 +379,10 @@ git add generator.sh
 git rebase --continue
 ```
 
-The branch `feature-2` is now up to date with master and we can simply merge the branch to master now.
+The branch `feature-2` is now up to date with main and we can simply merge the branch to main now.
 
 ```
-git checkout master
+git checkout main
 git merge feature-2
 git push
 ```
@@ -391,10 +396,10 @@ git branch -D feature-2
 git push origin --delete feature-2
 ```
 
-Running another `git lol` from `master` we observe a clean single tree history
+Running another `git lol` from `main` we observe a clean single tree history
 
 ```
-* da61890 (HEAD -> master, origin/master) Generating named files to out directory
+* da61890 (HEAD -> main, origin/main) Generating named files to out directory
 * 18fa162 Generating files to out directory
 * b1cae93 Generating random numbers to file
 * 6e98149 Generating simple greeting
